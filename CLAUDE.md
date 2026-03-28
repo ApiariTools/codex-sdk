@@ -2,30 +2,17 @@
 
 Rust SDK wrapping the OpenAI Codex CLI via JSONL stdout streaming.
 
+## Rules
+1. You are working in a git worktree on a `swarm/*` branch. Never commit to main.
+2. Only modify files within this repository.
+3. Do not run `cargo install` or modify system state.
+
 ## Quick Reference
 
 ```bash
 cargo test -p apiari-codex-sdk
 cargo test -p apiari-codex-sdk -- --ignored  # Integration tests (requires live `codex` CLI)
 ```
-
-## Swarm Worker Rules
-
-1. **You are working in a git worktree.** Always create a new branch (`swarm/*`), never commit directly to `main`.
-2. **Only modify files within this repo (`codex-sdk/`).** Do not touch other repos in the workspace (e.g., `hive/`, `common/`, `swarm/`).
-3. **When done, create a PR:**
-   ```bash
-   gh pr create --repo ApiariTools/apiari-codex-sdk --title "..." --body "..." --reviewer @copilot
-   ```
-4. **Do not run `cargo install` or modify system state.** No global installs, no modifying dotfiles, no system-level changes.
-5. **Plan+execute in one go without pausing.**
-
-## Git Workflow
-
-- You are working in a swarm worktree on a `swarm/*` branch. Stay on this branch.
-- NEVER push to or merge into `main` directly.
-- NEVER run `git push origin main` or `git checkout main`.
-- When done, push your branch and open a PR. Swarm will handle merging.
 
 ## Architecture
 
@@ -94,7 +81,7 @@ User message 3  →  exec_resume("looks good, commit it", ResumeOptions { sessio
 - **Input must be disabled while an execution is running.** You cannot queue or send messages mid-execution.
 - **interrupt() (SIGINT) can cancel** a running execution, but you can't redirect it — only stop it.
 - **Events stream in real-time** (`item.updated` gives incremental text) — the UI should render them live, not wait for completion.
-- **Hive integration** should abstract this behind `enum AgentBackend { Claude(..), Codex(..) }` at the coordinator level. The coordinator disables input for Codex backends while an execution is in flight, re-enables on EOF.
+- **Apiari integration** should abstract this behind `enum AgentBackend { Claude(..), Codex(..) }` at the coordinator level. The coordinator disables input for Codex backends while an execution is in flight, re-enables on EOF.
 
 ## Design Rules
 
